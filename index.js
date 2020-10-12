@@ -1,26 +1,23 @@
-import SockJS from "sockjs-client";
-import Stomp from "stompjs";
+const SockJS = require("sockjs-client");
+const Stomp = require("stompjs");
 
 class Socket {
-    #url;
-    #debug = false;
-    #client;
 
     constructor(url, debug) {
-        this.#url = url;
-        this.#debug = debug || false;
-        this.#client = undefined;
+        this.url = url;
+        this.debug = debug || false;
+        this.client = undefined;
 
-        console.assert(this.#url, "URL can't be empty");
+        console.assert(this.url, "URL can't be empty");
     }
 
     connect(headers) {
         return new Promise((resolve, reject) => {
             try {
-                let socket = new SockJS(this.#url);
-                this.#client = Stomp.over(socket);
-                this.#client.debug = this.#debug;
-                this.#client.connect(headers, frame => {
+                let socket = new SockJS(this.url);
+                this.client = Stomp.over(socket);
+                this.client.debug = this.debug;
+                this.client.connect(headers, frame => {
                         resolve(frame);
                     }, error => {
                         reject(error);
@@ -33,18 +30,18 @@ class Socket {
 
     disconnect() {
         try {
-            this.#client.disconnect();
+            this.client.disconnect();
         } catch (e) {
             console.error(e);
         } finally {
-            this.#client = undefined;
+            this.client = undefined;
         }
     }
 
     subscribe(destination) {
         return new Promise((resolve, reject) => {
             try {
-                this.#client
+                this.client
                     .subscribe(destination, message => {
                         resolve(message);
                     });
@@ -55,4 +52,4 @@ class Socket {
     }
 }
 
-export default Socket;
+module.exports = Socket;
