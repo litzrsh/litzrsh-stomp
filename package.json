@@ -1,6 +1,6 @@
 {
   "name": "litzrsh-stomp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Websocket client component for personal project",
   "main": "index.js",
   "scripts": {
